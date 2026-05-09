@@ -5,9 +5,20 @@ import plotly.express as px
 app = Flask(__name__)
 
 
+def classify_risk(moisture):
+    if moisture < 10:
+        return "High Risk"
+    elif moisture <= 20:
+        return "Medium Risk"
+    else:
+        return "Low Risk"
+
+
 @app.route("/")
 def home():
     original_df = pd.read_csv("soil_data.csv")
+
+    original_df["risk_level"] = original_df["moisture"].apply(classify_risk)
 
     selected_country = request.args.get("country")
     selected_soil_type = request.args.get("soil_type")
@@ -31,10 +42,9 @@ def home():
         x="temperature",
         y="moisture",
         color="soil_type",
-        hover_data=["location", "country", "ph", "organic_carbon"],
+        hover_data=["location", "country", "ph", "organic_carbon", "risk_level"],
         title="Temperature vs Moisture"
     )
-
     chart = scatter_fig.to_html(full_html=False)
 
     avg_by_country = (
@@ -49,8 +59,30 @@ def home():
         y="moisture",
         title="Average Moisture per Country"
     )
-
     bar_chart = bar_fig.to_html(full_html=False)
+
+    hist_fig = px.histogram(
+        df,
+        x="organic_carbon",
+        nbins=8,
+        title="Organic Carbon Distribution"
+    )
+    hist_chart = hist_fig.to_html(full_html=False)
+
+    risk_counts = (
+        df["risk_level"]
+        .value_counts()
+        .reset_index()
+    )
+    risk_counts.columns = ["risk_level", "count"]
+
+    risk_fig = px.bar(
+        risk_counts,
+        x="risk_level",
+        y="count",
+        title="Soil Risk Level Counts"
+    )
+    risk_chart = risk_fig.to_html(full_html=False)
 
     table = df.head(10).to_html(index=False)
 
@@ -60,11 +92,15 @@ def home():
         avg_moisture=avg_moisture,
         chart=chart,
         bar_chart=bar_chart,
+        hist_chart=hist_chart,
+        risk_chart=risk_chart,
         table=table,
         countries=countries,
         soil_types=soil_types,
         selected_country=selected_country,
         selected_soil_type=selected_soil_type
     )
+
+
 if __name__ == "__main__":
     app.run(debug=True)
