@@ -1,25 +1,19 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <title>Soil Dashboard</title>
 </head>
 
 <body>
+    <h1>Soil Health Dashboard</h1>
 
-<h1>Soil Health Dashboard</h1>
+    <p>Number of samples: {{ sample_count }}</p>
+    <p>Average moisture: {{ avg_moisture }}</p>
 
-<p>
-    Number of samples:
-    {{ sample_count }}
-</p>
+    <h2>Interactive Chart</h2>
+    {{ chart | safe }}
 
-<p>
-    Average moisture:
-    {{ avg_moisture }}
-</p>
-<h2>Interactive Chart</h2>
-
-{{ chart | safe }}
+    <h2>Data Preview</h2>
+    {{ table | safe }}
 </body>
 </html>
