@@ -40,7 +40,24 @@
 
 <body>
     <h1>Soil Health Dashboard</h1>
+<div class="card">
+    <form method="GET">
+        <label for="country">Filter by country:</label>
 
+        <select name="country" id="country">
+            <option value="">All Countries</option>
+
+            {% for country in countries %}
+                <option value="{{ country }}"
+                    {% if country == selected_country %}selected{% endif %}>
+                    {{ country }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <button type="submit">Apply</button>
+    </form>
+</div>
     <div class="card">
         <p>Number of samples: {{ sample_count }}</p>
         <p>Average moisture: {{ avg_moisture }}</p>
