@@ -20,6 +20,18 @@ def load_data():
     return df
 
 
+def apply_filters(df, country=None, soil_type=None):
+    filtered_df = df.copy()
+
+    if country:
+        filtered_df = filtered_df[filtered_df["country"] == country]
+
+    if soil_type:
+        filtered_df = filtered_df[filtered_df["soil_type"] == soil_type]
+
+    return filtered_df
+
+
 @app.route("/")
 def home():
     original_df = load_data()
@@ -27,13 +39,11 @@ def home():
     selected_country = request.args.get("country")
     selected_soil_type = request.args.get("soil_type")
 
-    df = original_df.copy()
-
-    if selected_country:
-        df = df[df["country"] == selected_country]
-
-    if selected_soil_type:
-        df = df[df["soil_type"] == selected_soil_type]
+    df = apply_filters(
+        original_df,
+        country=selected_country,
+        soil_type=selected_soil_type
+    )
 
     countries = sorted(original_df["country"].unique())
     soil_types = sorted(original_df["soil_type"].unique())
@@ -73,11 +83,7 @@ def home():
     )
     hist_chart = hist_fig.to_html(full_html=False)
 
-    risk_counts = (
-        df["risk_level"]
-        .value_counts()
-        .reset_index()
-    )
+    risk_counts = df["risk_level"].value_counts().reset_index()
     risk_counts.columns = ["risk_level", "count"]
 
     risk_fig = px.bar(
@@ -108,10 +114,35 @@ def home():
 
 @app.route("/api/summary")
 def api_summary():
-    df = load_data()
+    original_df = load_data()
+
+    selected_country = request.args.get("country")
+    selected_soil_type = request.args.get("soil_type")
+
+    df = apply_filters(
+        original_df,
+        country=selected_country,
+        soil_type=selected_soil_type
+    )
+
+    sample_count = len(df)
+
+    if sample_count == 0:
+        return jsonify({
+            "sample_count": 0,
+            "message": "No data found for selected filters",
+            "filters": {
+                "country": selected_country,
+                "soil_type": selected_soil_type
+            }
+        })
 
     summary = {
-        "sample_count": len(df),
+        "filters": {
+            "country": selected_country,
+            "soil_type": selected_soil_type
+        },
+        "sample_count": sample_count,
         "average_moisture": round(df["moisture"].mean(), 2),
         "average_temperature": round(df["temperature"].mean(), 2),
         "average_organic_carbon": round(df["organic_carbon"].mean(), 2),
