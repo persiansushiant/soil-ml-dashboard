@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 import pandas as pd
 import plotly.express as px
 
@@ -14,11 +14,15 @@ def classify_risk(moisture):
         return "Low Risk"
 
 
+def load_data():
+    df = pd.read_csv("soil_data.csv")
+    df["risk_level"] = df["moisture"].apply(classify_risk)
+    return df
+
+
 @app.route("/")
 def home():
-    original_df = pd.read_csv("soil_data.csv")
-
-    original_df["risk_level"] = original_df["moisture"].apply(classify_risk)
+    original_df = load_data()
 
     selected_country = request.args.get("country")
     selected_soil_type = request.args.get("soil_type")
@@ -100,6 +104,22 @@ def home():
         selected_country=selected_country,
         selected_soil_type=selected_soil_type
     )
+
+
+@app.route("/api/summary")
+def api_summary():
+    df = load_data()
+
+    summary = {
+        "sample_count": len(df),
+        "average_moisture": round(df["moisture"].mean(), 2),
+        "average_temperature": round(df["temperature"].mean(), 2),
+        "average_organic_carbon": round(df["organic_carbon"].mean(), 2),
+        "risk_counts": df["risk_level"].value_counts().to_dict(),
+        "soil_type_counts": df["soil_type"].value_counts().to_dict()
+    }
+
+    return jsonify(summary)
 
 
 if __name__ == "__main__":
