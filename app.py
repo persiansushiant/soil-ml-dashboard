@@ -10,16 +10,21 @@ def home():
     original_df = pd.read_csv("soil_data.csv")
 
     selected_country = request.args.get("country")
+    selected_soil_type = request.args.get("soil_type")
+
+    df = original_df.copy()
 
     if selected_country:
-        df = original_df[original_df["country"] == selected_country]
-    else:
-        df = original_df
+        df = df[df["country"] == selected_country]
+
+    if selected_soil_type:
+        df = df[df["soil_type"] == selected_soil_type]
 
     countries = sorted(original_df["country"].unique())
+    soil_types = sorted(original_df["soil_type"].unique())
 
     sample_count = len(df)
-    avg_moisture = df["moisture"].mean()
+    avg_moisture = round(df["moisture"].mean(), 2) if sample_count > 0 else 0
 
     scatter_fig = px.scatter(
         df,
@@ -52,14 +57,14 @@ def home():
     return render_template(
         "index.html",
         sample_count=sample_count,
-        avg_moisture=round(avg_moisture, 2),
+        avg_moisture=avg_moisture,
         chart=chart,
         bar_chart=bar_chart,
         table=table,
         countries=countries,
-        selected_country=selected_country
+        soil_types=soil_types,
+        selected_country=selected_country,
+        selected_soil_type=selected_soil_type
     )
-
-
 if __name__ == "__main__":
     app.run(debug=True)

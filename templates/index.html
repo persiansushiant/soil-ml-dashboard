@@ -1,80 +1,221 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Soil Dashboard</title>
+    <title>Soil Health Dashboard</title>
 
     <style>
         body {
+            margin: 0;
             font-family: Arial, sans-serif;
-            margin: 40px;
-            background: #f5f7f5;
+            background:
+                radial-gradient(circle at top left, #1f7a4d 0, transparent 28%),
+                linear-gradient(135deg, #081c15, #0b1320);
+            color: #f3fff7;
         }
 
-        h1 {
-            color: #2f4f4f;
+        .page {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+
+        .hero {
+            padding: 36px;
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+            border: 1px solid rgba(255,255,255,0.12);
+            margin-bottom: 28px;
+        }
+
+        .hero h1 {
+            font-size: 42px;
+            margin: 0 0 12px;
+        }
+
+        .hero p {
+            color: #cde8d5;
+            font-size: 18px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+
+        .stat-card,
+        .card {
+            background: rgba(255, 255, 255, 0.09);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 22px;
+            padding: 24px;
+            box-shadow: 0 12px 35px rgba(0,0,0,0.25);
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-number {
+            font-size: 38px;
+            font-weight: bold;
+            color: #9ff3c4;
+        }
+
+        .stat-label {
+            color: #cde8d5;
+            margin-top: 6px;
         }
 
         .card {
-            background: white;
-            padding: 24px;
-            margin-bottom: 24px;
+            margin-bottom: 28px;
+        }
+
+        .card h2 {
+            margin-top: 0;
+            color: #d8ffe8;
+        }
+
+        form {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        select,
+        button {
+            padding: 12px 16px;
             border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border: none;
+            font-size: 15px;
+        }
+
+        select {
+            background: #f3fff7;
+            color: #081c15;
+        }
+
+        button {
+            background: #9ff3c4;
+            color: #081c15;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(159,243,196,0.25);
         }
 
         table {
             border-collapse: collapse;
             width: 100%;
+            background: rgba(255,255,255,0.95);
+            color: #081c15;
+            border-radius: 16px;
+            overflow: hidden;
         }
 
         th, td {
-            padding: 8px;
-            border: 1px solid #ddd;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
         }
 
         th {
-            background: #e8f0ea;
+            background: #9ff3c4;
+        }
+
+        @media (max-width: 800px) {
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .page {
+                padding: 20px;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+            }
         }
     </style>
 </head>
 
 <body>
-    <h1>Soil Health Dashboard</h1>
-<div class="card">
-    <form method="GET">
-        <label for="country">Filter by country:</label>
+    <div class="page">
 
-        <select name="country" id="country">
-            <option value="">All Countries</option>
+        <section class="hero">
+            <h1>🌱 Soil Health Dashboard</h1>
+            <p>
+                Interactive exploration of soil moisture, temperature,
+                organic carbon, and sample metadata.
+            </p>
+        </section>
 
-            {% for country in countries %}
-                <option value="{{ country }}"
-                    {% if country == selected_country %}selected{% endif %}>
-                    {{ country }}
-                </option>
-            {% endfor %}
-        </select>
+        <div class="card">
+            <form method="GET">
+                <label for="country">Filter by country:</label>
+<label for="soil_type">Filter by soil type:</label>
 
-        <button type="submit">Apply</button>
-    </form>
-</div>
-    <div class="card">
-        <p>Number of samples: {{ sample_count }}</p>
-        <p>Average moisture: {{ avg_moisture }}</p>
+<select name="soil_type" id="soil_type">
+    <option value="">All Soil Types</option>
+
+    {% for soil_type in soil_types %}
+        <option value="{{ soil_type }}"
+            {% if soil_type == selected_soil_type %}selected{% endif %}>
+            {{ soil_type }}
+        </option>
+    {% endfor %}
+</select>
+                <select name="country" id="country">
+                    <option value="">All Countries</option>
+
+                    {% for country in countries %}
+                        <option value="{{ country }}"
+                            {% if country == selected_country %}selected{% endif %}>
+                            {{ country }}
+                        </option>
+                    {% endfor %}
+                </select>
+
+                <button type="submit">Apply Filter</button>
+            </form>
+        </div>
+
+        <section class="stats">
+            <div class="stat-card">
+                <div class="stat-number">{{ sample_count }}</div>
+                <div class="stat-label">Soil samples</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-number">{{ avg_moisture }}</div>
+                <div class="stat-label">Average moisture</div>
+            </div>
+        </section>
+
+        <div class="card">
+            <h2>Temperature vs Moisture</h2>
+            {{ chart | safe }}
+        </div>
+
+        <div class="card">
+            <h2>Average Moisture per Country</h2>
+            {{ bar_chart | safe }}
+        </div>
+
+        {% if hist_chart %}
+        <div class="card">
+            <h2>Organic Carbon Distribution</h2>
+            {{ hist_chart | safe }}
+        </div>
+        {% endif %}
+
+        <div class="card">
+            <h2>Data Preview</h2>
+            {{ table | safe }}
+        </div>
+
     </div>
-
-    <div class="card">
-        <h2>Interactive Chart</h2>
-        {{ chart | safe }}
-    </div>
-
-    <div class="card">
-        <h2>Data Preview</h2>
-        {{ table | safe }}
-    </div>
-<div class="card">
-    <h2>Average Moisture per Country</h2>
-    {{ bar_chart | safe }}
-</div>
 </body>
 </html>
