@@ -1,5 +1,6 @@
 from flask import Flask, render_template
 import pandas as pd
+import plotly.express as px
 
 app = Flask(__name__)
 
@@ -16,10 +17,27 @@ def home():
         .mean()
     )
 
+    fig = px.scatter(
+        df,
+        x="temperature",
+        y="moisture",
+        color="soil_type",
+        hover_data=[
+            "location",
+            "country"
+        ],
+        title="Temperature vs Moisture"
+    )
+
+    chart = fig.to_html(
+        full_html=False
+    )
+
     return render_template(
         "index.html",
         sample_count=sample_count,
-        avg_moisture=avg_moisture
+        avg_moisture=avg_moisture,
+        chart=chart
     )
 
 
