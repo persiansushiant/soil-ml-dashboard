@@ -20,6 +20,20 @@ def home():
         hover_data=["location", "country", "ph", "organic_carbon"],
         title="Temperature vs Moisture"
     )
+    avg_by_country = (
+        df.groupby("country", as_index=False)["moisture"]
+        .mean()
+        .sort_values("moisture", ascending=False)
+    )
+
+    bar_fig = px.bar(
+        avg_by_country,
+        x="country",
+        y="moisture",
+        title="Average Moisture per Country"
+    )
+
+    bar_chart = bar_fig.to_html(full_html=False)
 
     chart = fig.to_html(full_html=False)
 
@@ -30,6 +44,7 @@ def home():
         sample_count=sample_count,
         avg_moisture=avg_moisture,
         chart=chart,
+        bar_chart=bar_chart,
         table=table
     )
 
