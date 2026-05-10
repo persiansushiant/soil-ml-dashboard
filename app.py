@@ -1,9 +1,12 @@
 from flask import Flask, render_template, request, jsonify
 import pandas as pd
 import plotly.express as px
+
+from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
 app = Flask(__name__)
 
@@ -35,12 +38,99 @@ def apply_filters(df, country=None, soil_type=None):
     return filtered_df
 
 
+def get_model(model_name):
+    if model_name == "Linear Regression":
+        return LinearRegression()
+
+    if model_name == "Decision Tree":
+        return DecisionTreeRegressor(random_state=42)
+
+    if model_name == "Random Forest":
+        return RandomForestRegressor(random_state=42, n_estimators=100)
+
+    return LinearRegression()
+
+
+def run_ml_benchmark(df, target, model_name):
+    numeric_columns = [
+        "moisture",
+        "temperature",
+        "ph",
+        "organic_carbon",
+        "nitrogen"
+    ]
+
+    feature_columns = [
+        col for col in numeric_columns
+        if col != target
+    ]
+
+    ml_df = df[numeric_columns].dropna()
+
+    X = ml_df[feature_columns]
+    y = ml_df[target]
+
+    if len(ml_df) < 5:
+        return None
+
+    X_train, X_test, y_train, y_test = train_test_split(
+        X,
+        y,
+        test_size=0.3,
+        random_state=42
+    )
+
+    model = get_model(model_name)
+    model.fit(X_train, y_train)
+
+    predictions = model.predict(X_test)
+
+    mae = mean_absolute_error(y_test, predictions)
+    mse = mean_squared_error(y_test, predictions)
+    rmse = mse ** 0.5
+    r2 = r2_score(y_test, predictions)
+
+    results_df = pd.DataFrame({
+        "actual": y_test.values,
+        "predicted": predictions
+    })
+
+    fig = px.scatter(
+        results_df,
+        x="actual",
+        y="predicted",
+        title=f"Actual vs Predicted: {target}"
+    )
+
+    fig.add_shape(
+        type="line",
+        x0=results_df["actual"].min(),
+        y0=results_df["actual"].min(),
+        x1=results_df["actual"].max(),
+        y1=results_df["actual"].max()
+    )
+
+    prediction_chart = fig.to_html(full_html=False)
+
+    return {
+        "target": target,
+        "model": model_name,
+        "features": feature_columns,
+        "mae": round(mae, 3),
+        "rmse": round(rmse, 3),
+        "r2": round(r2, 3),
+        "prediction_chart": prediction_chart
+    }
+
+
 @app.route("/")
 def home():
     original_df = load_data()
 
     selected_country = request.args.get("country")
     selected_soil_type = request.args.get("soil_type")
+    selected_target = request.args.get("target")
+    selected_model = request.args.get("model")
 
     df = apply_filters(
         original_df,
@@ -50,6 +140,20 @@ def home():
 
     countries = sorted(original_df["country"].unique())
     soil_types = sorted(original_df["soil_type"].unique())
+
+    target_options = [
+        "moisture",
+        "temperature",
+        "organic_carbon",
+        "nitrogen",
+        "ph"
+    ]
+
+    model_options = [
+        "Linear Regression",
+        "Decision Tree",
+        "Random Forest"
+    ]
 
     sample_count = len(df)
     avg_moisture = round(df["moisture"].mean(), 2) if sample_count > 0 else 0
@@ -97,24 +201,15 @@ def home():
     )
     risk_chart = risk_fig.to_html(full_html=False)
 
+    ml_results = None
+    if selected_target and selected_model and sample_count >= 5:
+        ml_results = run_ml_benchmark(
+            df,
+            selected_target,
+            selected_model
+        )
+
     table = df.head(10).to_html(index=False)
-
-    target_options = [
-        "moisture",
-        "temperature",
-        "organic_carbon",
-        "nitrogen",
-        "ph"
-    ]
-
-    model_options = [
-        "Linear Regression",
-        "Decision Tree",
-        "Random Forest"
-    ]
-
-    selected_target = request.args.get("target")
-    selected_model = request.args.get("model")
 
     return render_template(
         "index.html",
@@ -128,11 +223,12 @@ def home():
         countries=countries,
         soil_types=soil_types,
         selected_country=selected_country,
+        selected_soil_type=selected_soil_type,
         target_options=target_options,
         model_options=model_options,
         selected_target=selected_target,
         selected_model=selected_model,
-        selected_soil_type=selected_soil_type
+        ml_results=ml_results
     )
 
 
