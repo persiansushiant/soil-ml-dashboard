@@ -208,6 +208,61 @@
                 <button type="submit">
                     Apply Filter
                 </button>
+                <div class="card">
+
+    <h2>
+        ML Model Benchmark
+    </h2>
+
+    <form method="GET">
+
+        <label for="target">
+            Select Target:
+        </label>
+
+        <select name="target" id="target">
+
+            {% for target in target_options %}
+
+                <option value="{{ target }}"
+                    {% if target == selected_target %}selected{% endif %}>
+
+                    {{ target }}
+
+                </option>
+
+            {% endfor %}
+
+        </select>
+
+
+        <label for="model">
+            Select Model:
+        </label>
+
+        <select name="model" id="model">
+
+            {% for model in model_options %}
+
+                <option value="{{ model }}"
+                    {% if model == selected_model %}selected{% endif %}>
+
+                    {{ model }}
+
+                </option>
+
+            {% endfor %}
+
+        </select>
+
+
+        <button type="submit">
+            Run ML Benchmark
+        </button>
+
+    </form>
+
+</div>
 
             </form>
 

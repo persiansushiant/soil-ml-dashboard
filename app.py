@@ -1,6 +1,9 @@
 from flask import Flask, render_template, request, jsonify
 import pandas as pd
 import plotly.express as px
+from sklearn.linear_model import LinearRegression
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.ensemble import RandomForestRegressor
 
 app = Flask(__name__)
 
@@ -96,6 +99,23 @@ def home():
 
     table = df.head(10).to_html(index=False)
 
+    target_options = [
+        "moisture",
+        "temperature",
+        "organic_carbon",
+        "nitrogen",
+        "ph"
+    ]
+
+    model_options = [
+        "Linear Regression",
+        "Decision Tree",
+        "Random Forest"
+    ]
+
+    selected_target = request.args.get("target")
+    selected_model = request.args.get("model")
+
     return render_template(
         "index.html",
         sample_count=sample_count,
@@ -108,6 +128,10 @@ def home():
         countries=countries,
         soil_types=soil_types,
         selected_country=selected_country,
+        target_options=target_options,
+        model_options=model_options,
+        selected_target=selected_target,
+        selected_model=selected_model,
         selected_soil_type=selected_soil_type
     )
 
