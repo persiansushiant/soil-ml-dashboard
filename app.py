@@ -8,52 +8,10 @@ from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
+from src.data_utils import load_data, apply_filters, get_filter_options
+
+
 app = Flask(__name__)
-
-
-def classify_risk(moisture):
-
-    if moisture < 10:
-        return "High Risk"
-
-    elif moisture <= 20:
-        return "Medium Risk"
-
-    else:
-        return "Low Risk"
-
-
-def load_data():
-
-    df = pd.read_csv(
-        "data/soil_data.csv"
-    )
-
-    df["risk_level"] = (
-        df["moisture"]
-        .apply(classify_risk)
-    )
-
-    return df
-
-
-def apply_filters(df, country=None, soil_type=None):
-
-    filtered_df = df.copy()
-
-    if country:
-
-        filtered_df = filtered_df[
-            filtered_df["country"] == country
-        ]
-
-    if soil_type:
-
-        filtered_df = filtered_df[
-            filtered_df["soil_type"] == soil_type
-        ]
-
-    return filtered_df
 
 
 def get_model(model_name):
@@ -65,7 +23,6 @@ def get_model(model_name):
         return DecisionTreeRegressor(random_state=42)
 
     if model_name == "Random Forest":
-
         return RandomForestRegressor(
             random_state=42,
             n_estimators=100
@@ -85,9 +42,7 @@ def run_ml_benchmark(df, target, model_name):
     ]
 
     feature_columns = [
-
         col for col in numeric_columns
-
         if col != target
     ]
 
@@ -97,7 +52,6 @@ def run_ml_benchmark(df, target, model_name):
         return None
 
     X = ml_df[feature_columns]
-
     y = ml_df[target]
 
     X_train, X_test, y_train, y_test = train_test_split(
@@ -108,17 +62,13 @@ def run_ml_benchmark(df, target, model_name):
     )
 
     model = get_model(model_name)
-
     model.fit(X_train, y_train)
 
     predictions = model.predict(X_test)
 
     mae = mean_absolute_error(y_test, predictions)
-
     mse = mean_squared_error(y_test, predictions)
-
     rmse = mse ** 0.5
-
     r2 = r2_score(y_test, predictions)
 
     results_df = pd.DataFrame({
@@ -133,24 +83,15 @@ def run_ml_benchmark(df, target, model_name):
         title=f"Actual vs Predicted: {target}"
     )
 
-    prediction_chart = fig.to_html(
-        full_html=False
-    )
+    prediction_chart = fig.to_html(full_html=False)
 
     return {
-
         "target": target,
-
         "model": model_name,
-
         "features": feature_columns,
-
         "mae": round(mae, 3),
-
         "rmse": round(rmse, 3),
-
         "r2": round(r2, 3),
-
         "prediction_chart": prediction_chart
     }
 
@@ -166,7 +107,6 @@ def compare_models(df, target):
     results = []
 
     for model_name in model_names:
-
         result = run_ml_benchmark(
             df,
             target,
@@ -174,15 +114,10 @@ def compare_models(df, target):
         )
 
         if result:
-
             results.append({
-
                 "model": model_name,
-
                 "mae": result["mae"],
-
                 "rmse": result["rmse"],
-
                 "r2": result["r2"]
             })
 
@@ -196,13 +131,8 @@ def compare_models(df, target):
         title=f"Model Comparison for {target}"
     )
 
-    comparison_chart = fig.to_html(
-        full_html=False
-    )
-
-    comparison_table = comparison_df.to_html(
-        index=False
-    )
+    comparison_chart = fig.to_html(full_html=False)
+    comparison_table = comparison_df.to_html(index=False)
 
     best_model_row = (
         comparison_df
@@ -211,13 +141,9 @@ def compare_models(df, target):
     )
 
     return {
-
         "chart": comparison_chart,
-
         "table": comparison_table,
-
         "best_model": best_model_row["model"],
-
         "best_r2": best_model_row["r2"]
     }
 
@@ -228,11 +154,8 @@ def home():
     original_df = load_data()
 
     selected_country = request.args.get("country")
-
     selected_soil_type = request.args.get("soil_type")
-
     selected_target = request.args.get("target")
-
     selected_model = request.args.get("model")
 
     df = apply_filters(
@@ -241,13 +164,7 @@ def home():
         soil_type=selected_soil_type
     )
 
-    countries = sorted(
-        original_df["country"].unique()
-    )
-
-    soil_types = sorted(
-        original_df["soil_type"].unique()
-    )
+    countries, soil_types = get_filter_options(original_df)
 
     target_options = [
         "moisture",
@@ -264,11 +181,7 @@ def home():
     ]
 
     sample_count = len(df)
-
-    avg_moisture = round(
-        df["moisture"].mean(),
-        2
-    )
+    avg_moisture = round(df["moisture"].mean(), 2)
 
     scatter_fig = px.scatter(
         df,
@@ -285,23 +198,12 @@ def home():
         title="Temperature vs Moisture"
     )
 
-    chart = scatter_fig.to_html(
-        full_html=False
-    )
+    chart = scatter_fig.to_html(full_html=False)
 
     avg_by_country = (
-
-        df.groupby(
-            "country",
-            as_index=False
-        )["moisture"]
-
+        df.groupby("country", as_index=False)["moisture"]
         .mean()
-
-        .sort_values(
-            "moisture",
-            ascending=False
-        )
+        .sort_values("moisture", ascending=False)
     )
 
     bar_fig = px.bar(
@@ -311,9 +213,7 @@ def home():
         title="Average Moisture per Country"
     )
 
-    bar_chart = bar_fig.to_html(
-        full_html=False
-    )
+    bar_chart = bar_fig.to_html(full_html=False)
 
     hist_fig = px.histogram(
         df,
@@ -322,9 +222,7 @@ def home():
         title="Organic Carbon Distribution"
     )
 
-    hist_chart = hist_fig.to_html(
-        full_html=False
-    )
+    hist_chart = hist_fig.to_html(full_html=False)
 
     risk_counts = (
         df["risk_level"]
@@ -344,16 +242,12 @@ def home():
         title="Soil Risk Level Counts"
     )
 
-    risk_chart = risk_fig.to_html(
-        full_html=False
-    )
+    risk_chart = risk_fig.to_html(full_html=False)
 
     ml_results = None
-
     model_comparison = None
 
     if selected_target and selected_model:
-
         ml_results = run_ml_benchmark(
             df,
             selected_target,
@@ -361,56 +255,34 @@ def home():
         )
 
     if selected_target:
-
         model_comparison = compare_models(
             df,
             selected_target
         )
 
-    table = df.head(10).to_html(
-        index=False
-    )
+    table = df.head(10).to_html(index=False)
 
     return render_template(
-
         "index.html",
-
         sample_count=sample_count,
-
         avg_moisture=avg_moisture,
-
         chart=chart,
-
         bar_chart=bar_chart,
-
         hist_chart=hist_chart,
-
         risk_chart=risk_chart,
-
         table=table,
-
         countries=countries,
-
         soil_types=soil_types,
-
         selected_country=selected_country,
-
         selected_soil_type=selected_soil_type,
-
         target_options=target_options,
-
         model_options=model_options,
-
         selected_target=selected_target,
-
         selected_model=selected_model,
-
         ml_results=ml_results,
-
         model_comparison=model_comparison
     )
 
 
 if __name__ == "__main__":
-
     app.run(debug=True)
