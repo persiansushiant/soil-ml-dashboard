@@ -1,5 +1,5 @@
-title: Soil ML Dashboard Documentation
-description: Documentation for a Flask-based soil health machine learning dashboard
+title: Soil ML Dashboard
+description: Environmental analytics and machine learning benchmarking dashboard
 
 theme: minima
 
@@ -7,6 +7,7 @@ header_pages:
   - usage.md
   - workflow.md
   - model-benchmarking.md
-  - fair-principles.md
   - architecture.md
   - api.md
+  - developer-guide.md
+  - fair-principles.md
