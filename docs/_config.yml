@@ -9,3 +9,4 @@ header_pages:
   - model-benchmarking.md
   - fair-principles.md
   - architecture.md
+  - api.md
