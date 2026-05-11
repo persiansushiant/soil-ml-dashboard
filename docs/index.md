@@ -4,7 +4,7 @@ A lightweight research-tool prototype for environmental analytics, soil-health e
 
 ---
 
-# Overview
+## Overview
 
 The Soil ML Dashboard demonstrates a modular Flask-based workflow for:
 
@@ -25,9 +25,9 @@ The project combines:
 
 ---
 
-# Main Features
+## Main Features
 
-## Environmental Analytics
+### Environmental Analytics
 
 - Soil moisture exploration
 - Organic carbon visualization
@@ -37,7 +37,7 @@ The project combines:
 
 ---
 
-## Machine Learning Benchmarking
+### Machine Learning Benchmarking
 
 The dashboard supports:
 
@@ -55,7 +55,7 @@ Supported models:
 
 ---
 
-# Dashboard Workflow
+## Dashboard Workflow
 
 ```text
 User Input
@@ -69,51 +69,84 @@ Machine Learning Pipeline
 Benchmark Metrics
     ↓
 Interactive Visualization
-Documentation Sections
-User Documentation
-Usage Guide
-Workflow Overview
-Machine Learning Documentation
-Model Benchmarking
-Engineering Documentation
-Application Architecture
-API Documentation
-Developer Guide
-Research & FAIR Documentation
-FAIR Principles
-Technology Stack
-Layer	Technology
-Backend	Flask
-Data Processing	pandas
-Visualization	Plotly
-Machine Learning	scikit-learn
-Frontend	HTML/CSS
-Documentation	Jekyll / Markdown
-Version Control	Git/GitHub
-Design Philosophy
+```
+
+---
+
+## Documentation Sections
+
+### User Documentation
+
+- [Usage Guide](usage.md)
+- [Workflow Overview](workflow.md)
+
+---
+
+### Machine Learning Documentation
+
+- [Model Benchmarking](model-benchmarking.md)
+
+---
+
+### Engineering Documentation
+
+- [Application Architecture](architecture.md)
+- [API Documentation](api.md)
+- [Developer Guide](developer-guide.md)
+
+---
+
+### Research & FAIR Documentation
+
+- [FAIR Principles](fair-principles.md)
+
+---
+
+## Technology Stack
+
+| Layer | Technology |
+|---|---|
+| Backend | Flask |
+| Data Processing | pandas |
+| Visualization | Plotly |
+| Machine Learning | scikit-learn |
+| Frontend | HTML/CSS |
+| Documentation | Jekyll / Markdown |
+| Version Control | Git/GitHub |
+
+---
+
+## Design Philosophy
 
 The project prioritizes:
 
-readability
-modularity
-lightweight deployment
-educational clarity
-reusable workflows
-maintainable code structure
-Future Development Ideas
+- readability
+- modularity
+- lightweight deployment
+- educational clarity
+- reusable workflows
+- maintainable code structure
+
+---
+
+## Future Development Ideas
 
 Potential future extensions include:
 
-PostgreSQL integration
-geospatial visualization
-satellite-data workflows
-REST API endpoints
-dataset upload interface
-Docker deployment
-model persistence
-exportable benchmark reports
-field-data collection workflows
-Repository Structure
+- PostgreSQL integration
+- geospatial visualization
+- satellite-data workflows
+- REST API endpoints
+- dataset upload interface
+- Docker deployment
+- model persistence
+- exportable benchmark reports
+
+---
+
+## Repository Structure
+
+```text
 soil-ml-dashboard/
 │
 ├── app.py
@@ -122,12 +155,16 @@ soil-ml-dashboard/
 ├── templates/
 ├── static/
 └── docs/
-Project Goal
+```
+
+---
+
+## Project Goal
 
 This repository was designed as a compact demonstration of:
 
-environmental data analysis
-ML benchmarking workflows
-scientific dashboard design
-modular Python engineering
-documentation-first development
+- environmental data analysis
+- ML benchmarking workflows
+- scientific dashboard design
+- modular Python engineering
+- documentation-first development

@@ -11,27 +11,33 @@ FAIR stands for:
 
 ---
 
-# Project Alignment
+## Project Alignment
 
-## Findable
+### Findable
 
 The project uses a structured modular layout and documented workflows.
 
-## Accessible
+---
+
+### Accessible
 
 The dashboard provides interactive access to processed soil data.
 
-## Interoperable
+---
+
+### Interoperable
 
 The application uses common open-source Python libraries and standard CSV formats.
 
-## Reusable
+---
+
+### Reusable
 
 The project includes reusable utility modules and documentation pages.
 
 ---
 
-# Future FAIR Improvements
+## Future FAIR Improvements
 
 Potential future improvements include:
 

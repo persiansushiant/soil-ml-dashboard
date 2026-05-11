@@ -6,47 +6,55 @@ The benchmarking workflow compares multiple regression models using the same tar
 
 ---
 
-# Supported Models
+## Supported Models
 
-## Linear Regression
+### Linear Regression
 
 A simple baseline regression model.
 
-## Decision Tree Regressor
+---
+
+### Decision Tree Regressor
 
 A tree-based model capable of learning non-linear relationships.
 
-## Random Forest Regressor
+---
+
+### Random Forest Regressor
 
 An ensemble model using multiple decision trees.
 
 ---
 
-# Evaluation Metrics
+## Evaluation Metrics
 
-## MAE
+### MAE
 
 Mean Absolute Error.
 
 Measures average prediction error.
 
-## RMSE
+---
+
+### RMSE
 
 Root Mean Squared Error.
 
 Penalizes larger prediction errors.
 
-## R² Score
+---
+
+### R² Score
 
 Measures explained variance and model fit quality.
 
 ---
 
-# Benchmark Output
+## Benchmark Output
 
 The dashboard displays:
 
-- Actual vs predicted visualization
-- Model comparison chart
-- Metrics comparison table
-- Best-performing model
+- actual vs predicted visualization
+- model comparison chart
+- metrics comparison table
+- best-performing model
