@@ -1,55 +1,133 @@
-# Soil ML Dashboard Documentation
+# Soil ML Dashboard
 
-Welcome to the documentation for the Soil ML Dashboard project.
-
-This project demonstrates:
-
-- Interactive environmental dashboards
-- Soil health data exploration
-- Machine learning benchmarking
-- Scientific visualization workflows
-- Modular Flask application design
+A lightweight research-tool prototype for environmental analytics, soil-health exploration, and machine learning benchmarking.
 
 ---
 
-# Documentation Pages
+# Overview
 
-- [Usage Guide](usage.md)
-- [Workflow Overview](workflow.md)
-- [Model Benchmarking](model-benchmarking.md)
-- [FAIR Principles](fair-principles.md)
+The Soil ML Dashboard demonstrates a modular Flask-based workflow for:
+
+- soil-health analysis
+- environmental visualization
+- machine learning benchmarking
+- scientific dashboard design
+- lightweight research-tool prototyping
+
+The project combines:
+
+- pandas
+- Plotly
+- scikit-learn
+- Flask
+- modular Python architecture
+- Jekyll-ready documentation
 
 ---
 
 # Main Features
 
-## Dashboard Features
+## Environmental Analytics
 
-- Soil data filtering
-- Interactive Plotly charts
-- Risk-level analysis
-- Environmental indicators
-
-## Machine Learning Features
-
-- Regression model training
-- Model comparison
-- Performance metrics
-- Benchmark visualization
+- Soil moisture exploration
+- Organic carbon visualization
+- Country-based filtering
+- Soil-type analysis
+- Risk-level classification
 
 ---
 
-# Technology Stack
+## Machine Learning Benchmarking
 
-- Flask
-- pandas
-- Plotly
-- scikit-learn
-- HTML/CSS
-- Git/GitHub
+The dashboard supports:
+
+- regression workflows
+- train/test evaluation
+- model comparison
+- benchmark metrics
+- prediction visualization
+
+Supported models:
+
+- Linear Regression
+- Decision Tree Regressor
+- Random Forest Regressor
 
 ---
 
-# Project Goal
+# Dashboard Workflow
 
-The goal of this project is to demonstrate a compact research-tool prototype for soil health analytics and machine learning benchmarking.
+```text
+User Input
+    ↓
+Dataset Filtering
+    ↓
+Feature Selection
+    ↓
+Machine Learning Pipeline
+    ↓
+Benchmark Metrics
+    ↓
+Interactive Visualization
+Documentation Sections
+User Documentation
+Usage Guide
+Workflow Overview
+Machine Learning Documentation
+Model Benchmarking
+Engineering Documentation
+Application Architecture
+API Documentation
+Developer Guide
+Research & FAIR Documentation
+FAIR Principles
+Technology Stack
+Layer	Technology
+Backend	Flask
+Data Processing	pandas
+Visualization	Plotly
+Machine Learning	scikit-learn
+Frontend	HTML/CSS
+Documentation	Jekyll / Markdown
+Version Control	Git/GitHub
+Design Philosophy
+
+The project prioritizes:
+
+readability
+modularity
+lightweight deployment
+educational clarity
+reusable workflows
+maintainable code structure
+Future Development Ideas
+
+Potential future extensions include:
+
+PostgreSQL integration
+geospatial visualization
+satellite-data workflows
+REST API endpoints
+dataset upload interface
+Docker deployment
+model persistence
+exportable benchmark reports
+field-data collection workflows
+Repository Structure
+soil-ml-dashboard/
+│
+├── app.py
+├── data/
+├── src/
+├── templates/
+├── static/
+└── docs/
+Project Goal
+
+This repository was designed as a compact demonstration of:
+
+environmental data analysis
+ML benchmarking workflows
+scientific dashboard design
+modular Python engineering
+documentation-first development
