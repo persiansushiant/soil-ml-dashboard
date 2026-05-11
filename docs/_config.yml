@@ -8,3 +8,4 @@ header_pages:
   - workflow.md
   - model-benchmarking.md
   - fair-principles.md
+  - architecture.md
