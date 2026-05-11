@@ -10,4 +10,7 @@ header_pages:
   - architecture.md
   - api.md
   - developer-guide.md
+  - testing.md
+  - postgresql-plan.md
+  - field-app-roadmap.md
   - fair-principles.md
