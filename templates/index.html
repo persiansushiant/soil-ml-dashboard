@@ -1,296 +1,352 @@
 <!DOCTYPE html>
 <html>
 <head>
+
     <title>Soil ML Dashboard</title>
 
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background:
-                radial-gradient(circle at top left, #1f7a4d 0, transparent 28%),
-                linear-gradient(135deg, #081c15, #0b1320);
-            color: #f3fff7;
-        }
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
 
-        .page {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 40px;
-        }
-
-        .hero, .card, .stat-card {
-            background: rgba(255, 255, 255, 0.09);
-            border: 1px solid rgba(255,255,255,0.12);
-            border-radius: 22px;
-            padding: 24px;
-            box-shadow: 0 12px 35px rgba(0,0,0,0.25);
-            backdrop-filter: blur(10px);
-        }
-
-        .hero {
-            margin-bottom: 28px;
-        }
-
-        .hero h1 {
-            font-size: 42px;
-            margin: 0 0 12px;
-        }
-
-        .hero p {
-            color: #cde8d5;
-            font-size: 18px;
-        }
-
-        .card {
-            margin-bottom: 28px;
-        }
-
-        .card h2 {
-            margin-top: 0;
-            color: #d8ffe8;
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 18px;
-            margin-bottom: 28px;
-        }
-
-        .stat-number {
-            font-size: 36px;
-            font-weight: bold;
-            color: #9ff3c4;
-        }
-
-        .stat-label {
-            color: #cde8d5;
-            margin-top: 6px;
-        }
-
-        form {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        select, button {
-            padding: 12px 16px;
-            border-radius: 12px;
-            border: none;
-            font-size: 15px;
-        }
-
-        select {
-            background: #f3fff7;
-            color: #081c15;
-        }
-
-        button {
-            background: #9ff3c4;
-            color: #081c15;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        button:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 8px 20px rgba(159,243,196,0.25);
-        }
-
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            background: rgba(255,255,255,0.95);
-            color: #081c15;
-            border-radius: 16px;
-            overflow: hidden;
-        }
-
-        th, td {
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-        }
-
-        th {
-            background: #9ff3c4;
-        }
-
-        .muted {
-            color: #cde8d5;
-        }
-
-        @media (max-width: 800px) {
-            .stats {
-                grid-template-columns: 1fr;
-            }
-
-            .page {
-                padding: 20px;
-            }
-
-            .hero h1 {
-                font-size: 32px;
-            }
-        }
-    </style>
 </head>
 
 <body>
+
     <div class="page">
 
         <section class="hero">
-            <h1>🌱 Soil ML Dashboard</h1>
+
+            <h1>
+                🌱 Soil ML Dashboard
+            </h1>
+
             <p>
-                Interactive soil data exploration, filtering, risk analysis,
-                and machine learning benchmark demo.
+                Interactive soil data exploration,
+                machine learning benchmark,
+                and environmental analytics demo.
             </p>
+
         </section>
 
         <div class="card">
-            <h2>Data Filters</h2>
+
+            <h2>
+                Dashboard Controls
+            </h2>
 
             <form method="GET">
-                <label for="country">Country:</label>
+
+                <label for="country">
+                    Country:
+                </label>
 
                 <select name="country" id="country">
-                    <option value="">All Countries</option>
+
+                    <option value="">
+                        All Countries
+                    </option>
 
                     {% for country in countries %}
+
                         <option value="{{ country }}"
                             {% if country == selected_country %}selected{% endif %}>
+
                             {{ country }}
+
                         </option>
+
                     {% endfor %}
+
                 </select>
 
-                <label for="soil_type">Soil Type:</label>
+
+                <label for="soil_type">
+                    Soil Type:
+                </label>
 
                 <select name="soil_type" id="soil_type">
-                    <option value="">All Soil Types</option>
+
+                    <option value="">
+                        All Soil Types
+                    </option>
 
                     {% for soil_type in soil_types %}
+
                         <option value="{{ soil_type }}"
                             {% if soil_type == selected_soil_type %}selected{% endif %}>
+
                             {{ soil_type }}
+
                         </option>
+
                     {% endfor %}
+
                 </select>
 
-                <label for="target">Target:</label>
+
+                <label for="target">
+                    Target:
+                </label>
 
                 <select name="target" id="target">
+
                     {% for target in target_options %}
+
                         <option value="{{ target }}"
                             {% if target == selected_target %}selected{% endif %}>
+
                             {{ target }}
+
                         </option>
+
                     {% endfor %}
+
                 </select>
 
-                <label for="model">Model:</label>
+
+                <label for="model">
+                    Model:
+                </label>
 
                 <select name="model" id="model">
+
                     {% for model in model_options %}
+
                         <option value="{{ model }}"
                             {% if model == selected_model %}selected{% endif %}>
+
                             {{ model }}
+
                         </option>
+
                     {% endfor %}
+
                 </select>
 
                 <button type="submit">
-                    Run Dashboard
+                    Run Benchmark
                 </button>
+
             </form>
+
         </div>
 
+
         <section class="stats">
-            <div class="stat-card">
-                <div class="stat-number">{{ sample_count }}</div>
-                <div class="stat-label">Soil samples</div>
-            </div>
 
             <div class="stat-card">
-                <div class="stat-number">{{ avg_moisture }}</div>
-                <div class="stat-label">Average moisture</div>
-            </div>
 
-            <div class="stat-card">
                 <div class="stat-number">
-                    {% if selected_model %}
-                        {{ selected_model }}
-                    {% else %}
-                        No model
-                    {% endif %}
+                    {{ sample_count }}
                 </div>
-                <div class="stat-label">Selected ML model</div>
+
+                <div class="stat-label">
+                    Soil samples
+                </div>
+
             </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-number">
+                    {{ avg_moisture }}
+                </div>
+
+                <div class="stat-label">
+                    Average moisture
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-number">
+
+                    {% if selected_target %}
+                        {{ selected_target }}
+                    {% else %}
+                        No target
+                    {% endif %}
+
+                </div>
+
+                <div class="stat-label">
+                    Selected target
+                </div>
+
+            </div>
+
         </section>
 
-        {% if ml_results %}
-        <div class="card">
-            <h2>ML Benchmark Results</h2>
 
-            <p><strong>Target:</strong> {{ ml_results.target }}</p>
-            <p><strong>Model:</strong> {{ ml_results.model }}</p>
-            <p><strong>Features:</strong> {{ ml_results.features }}</p>
+        {% if ml_results %}
+
+        <div class="card">
+
+            <h2>
+                Selected Model Result
+            </h2>
+
+            <p>
+                <strong>Target:</strong>
+                {{ ml_results.target }}
+            </p>
+
+            <p>
+                <strong>Model:</strong>
+                {{ ml_results.model }}
+            </p>
+
+            <p>
+                <strong>Features:</strong>
+                {{ ml_results.features }}
+            </p>
+
 
             <section class="stats">
-                <div class="stat-card">
-                    <div class="stat-number">{{ ml_results.mae }}</div>
-                    <div class="stat-label">MAE</div>
-                </div>
 
                 <div class="stat-card">
-                    <div class="stat-number">{{ ml_results.rmse }}</div>
-                    <div class="stat-label">RMSE</div>
+
+                    <div class="stat-number">
+                        {{ ml_results.mae }}
+                    </div>
+
+                    <div class="stat-label">
+                        MAE
+                    </div>
+
                 </div>
 
+
                 <div class="stat-card">
-                    <div class="stat-number">{{ ml_results.r2 }}</div>
-                    <div class="stat-label">R² Score</div>
+
+                    <div class="stat-number">
+                        {{ ml_results.rmse }}
+                    </div>
+
+                    <div class="stat-label">
+                        RMSE
+                    </div>
+
                 </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-number">
+                        {{ ml_results.r2 }}
+                    </div>
+
+                    <div class="stat-label">
+                        R² Score
+                    </div>
+
+                </div>
+
             </section>
 
             {{ ml_results.prediction_chart | safe }}
+
         </div>
-        {% else %}
-        <div class="card">
-            <h2>ML Benchmark Results</h2>
-            <p class="muted">
-                Select a target and model, then run the dashboard to train a model.
-            </p>
-        </div>
+
         {% endif %}
 
+
+        {% if model_comparison %}
+
         <div class="card">
-            <h2>Temperature vs Moisture</h2>
+
+            <h2>
+                Model Comparison
+            </h2>
+
+            <p class="muted">
+
+                Comparison of multiple regression models
+                using the same target variable.
+
+            </p>
+
+            <p>
+
+                Best model:
+                <span class="highlight">
+                    {{ model_comparison.best_model }}
+                </span>
+
+            </p>
+
+            {{ model_comparison.chart | safe }}
+
+            <h3>
+                Metrics Table
+            </h3>
+
+            {{ model_comparison.table | safe }}
+
+        </div>
+
+        {% endif %}
+
+
+        <div class="card">
+
+            <h2>
+                Temperature vs Moisture
+            </h2>
+
             {{ chart | safe }}
+
         </div>
 
+
         <div class="card">
-            <h2>Average Moisture per Country</h2>
+
+            <h2>
+                Average Moisture per Country
+            </h2>
+
             {{ bar_chart | safe }}
+
         </div>
 
+
         <div class="card">
-            <h2>Organic Carbon Distribution</h2>
+
+            <h2>
+                Organic Carbon Distribution
+            </h2>
+
             {{ hist_chart | safe }}
+
         </div>
 
+
         <div class="card">
-            <h2>Soil Risk Level Counts</h2>
+
+            <h2>
+                Soil Risk Level Counts
+            </h2>
+
             {{ risk_chart | safe }}
+
         </div>
 
+
         <div class="card">
-            <h2>Data Preview</h2>
+
+            <h2>
+                Data Preview
+            </h2>
+
             {{ table | safe }}
+
         </div>
 
     </div>
+
 </body>
 </html>

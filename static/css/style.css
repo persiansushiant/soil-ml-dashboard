@@ -1,0 +1,180 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+
+    background:
+        radial-gradient(circle at top left, #1f7a4d 0, transparent 28%),
+        linear-gradient(135deg, #081c15, #0b1320);
+
+    color: #f3fff7;
+}
+
+.page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px;
+}
+
+.hero,
+.card,
+.stat-card {
+
+    background: rgba(255, 255, 255, 0.09);
+
+    border: 1px solid rgba(255,255,255,0.12);
+
+    border-radius: 22px;
+
+    padding: 24px;
+
+    box-shadow: 0 12px 35px rgba(0,0,0,0.25);
+
+    backdrop-filter: blur(10px);
+}
+
+.hero {
+    margin-bottom: 28px;
+}
+
+.hero h1 {
+    font-size: 42px;
+    margin: 0 0 12px;
+}
+
+.hero p {
+    color: #cde8d5;
+    font-size: 18px;
+}
+
+.card {
+    margin-bottom: 28px;
+}
+
+.card h2 {
+    margin-top: 0;
+    color: #d8ffe8;
+}
+
+.stats {
+
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 18px;
+
+    margin-bottom: 28px;
+}
+
+.stat-number {
+
+    font-size: 36px;
+
+    font-weight: bold;
+
+    color: #9ff3c4;
+}
+
+.stat-label {
+    color: #cde8d5;
+    margin-top: 6px;
+}
+
+form {
+
+    display: flex;
+
+    gap: 12px;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+}
+
+select,
+button {
+
+    padding: 12px 16px;
+
+    border-radius: 12px;
+
+    border: none;
+
+    font-size: 15px;
+}
+
+select {
+    background: #f3fff7;
+    color: #081c15;
+}
+
+button {
+
+    background: #9ff3c4;
+
+    color: #081c15;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+button:hover {
+
+    transform: translateY(-1px);
+
+    box-shadow: 0 8px 20px rgba(159,243,196,0.25);
+}
+
+table {
+
+    border-collapse: collapse;
+
+    width: 100%;
+
+    background: rgba(255,255,255,0.95);
+
+    color: #081c15;
+
+    border-radius: 16px;
+
+    overflow: hidden;
+}
+
+th,
+td {
+
+    padding: 10px;
+
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background: #9ff3c4;
+}
+
+.muted {
+    color: #cde8d5;
+}
+
+.highlight {
+
+    color: #9ff3c4;
+
+    font-weight: bold;
+}
+
+@media (max-width: 800px) {
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+
+    .page {
+        padding: 20px;
+    }
+
+    .hero h1 {
+        font-size: 32px;
+    }
+}
